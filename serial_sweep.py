@@ -22,6 +22,7 @@ if __name__ == "__main__":
 		arduino = arduinos[0]
 	except IndexError:
 		print "No Arduinos found"
+		sys.exit(1)
 
 
 	print "Connecting to " + arduino
