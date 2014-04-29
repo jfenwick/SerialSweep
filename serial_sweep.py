@@ -66,7 +66,7 @@ if __name__ == "__main__":
 			
 			# write a position to the Arduino
 			written = ser.write(str(pos))
-			pos = pos + 1
+			pos += 1
 			if pos > 165:
 				pos = 20
 			sleep(1.1)
