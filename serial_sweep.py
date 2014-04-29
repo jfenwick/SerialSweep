@@ -13,32 +13,8 @@ def servo_iter():
 	for pos in range(20,165):
 		yield pos
 
-# A function that tries to list serial ports on most common platforms
-def list_serial_ports():
-	system_name = platform.system()
-	if system_name == "Windows":
-		# Scan for available ports.
-		available = []
-		for i in range(256):
-			try:
-				s = serial.Serial(i)
-				available.append(i)
-				s.close()
-			except serial.SerialException:
-				pass
-		return available
-	elif system_name == "Darwin":
-		# Mac
-		return glob.glob('/dev/tty*') + glob.glob('/dev/cu*')
-	else:
-		# Assume Linux or something else
-		return glob.glob('/dev/ttyS*') + glob.glob('/dev/ttyUSB*')
-
 if __name__ == "__main__":
-	# get all ports
-	ports = list_serial_ports()
-
-	# fiilter Arduino port
+	# find arduinos
 	arduinos = glob.glob('/dev/tty.usbmodem*')
 
 	# select first arduino
@@ -50,7 +26,6 @@ if __name__ == "__main__":
 
 	print "Connecting to " + arduino
 
-	#pos = 20
 	pos = servo_iter()
 	try:
 		# connect to serial port
@@ -77,4 +52,3 @@ if __name__ == "__main__":
 	# close the serial port on exit, or you will have to unplug the Arduino to connect again
 	finally:
 		ser.close()
-
