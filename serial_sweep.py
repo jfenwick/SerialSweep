@@ -7,8 +7,11 @@ import glob
 import platform
 import serial
 from time import sleep
+import sys
 
-import atexit
+def servo_iter():
+	for pos in range(20,165):
+		yield pos
 
 # A function that tries to list serial ports on most common platforms
 def list_serial_ports():
@@ -44,32 +47,38 @@ if __name__ == "__main__":
 	except IndexError:
 		print "No Arduinos found"
 
+
 	print "Connecting to " + arduino
 
-	pos = 20
+	#pos = 20
+	pos = servo_iter()
+	pos.next()
 	try:
 		# connect to serial port
 		ser = serial.Serial(arduino, 115200)
 	except:
 		print "Failed to connect to Arduino"
+		sys.exit(1)
 
 	# need a short delay right after serial port is started for the Arduino to initialize
 	sleep(2)
 
 	try:
 		while True:
-			print pos
+			x = pos.next()
+			print x
 			# get and print a line of data from Arduino
 			#data = ser.readline()
 			#if len(data) > 0:
 			#	print data
 			
 			# write a position to the Arduino
-			written = ser.write(str(pos))
-			pos += 1
-			if pos > 165:
-				pos = 20
+			written = ser.write(str(x))
+			#pos += 1
+			#if pos > 165:
+			#	pos = 20
 			sleep(1.1)
 	# close the serial port on exit, or you will have to unplug the Arduino to connect again
 	finally:
 		ser.close()
+
