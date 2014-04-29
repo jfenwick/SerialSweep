@@ -52,7 +52,6 @@ if __name__ == "__main__":
 
 	#pos = 20
 	pos = servo_iter()
-	pos.next()
 	try:
 		# connect to serial port
 		ser = serial.Serial(arduino, 115200)
@@ -65,18 +64,15 @@ if __name__ == "__main__":
 
 	try:
 		while True:
-			x = pos.next()
+			try:
+				x = pos.next()
+			except StopIteration:
+				pos = servo_iter()
+				x = pos.next()
 			print x
-			# get and print a line of data from Arduino
-			#data = ser.readline()
-			#if len(data) > 0:
-			#	print data
 			
 			# write a position to the Arduino
 			written = ser.write(str(x))
-			#pos += 1
-			#if pos > 165:
-			#	pos = 20
 			sleep(1.1)
 	# close the serial port on exit, or you will have to unplug the Arduino to connect again
 	finally:
